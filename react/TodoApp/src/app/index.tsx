@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from 'modules/home/containers';
 import ProfileScreen from 'modules/profile/containers';
-import { store } from 'app/store';
+import { store } from './store';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +16,7 @@ const App = () => {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{ title: 'Welcome2' }}
+            options={{ title: 'Todo' }}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />
         </Stack.Navigator>

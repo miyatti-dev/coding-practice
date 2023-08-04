@@ -9,19 +9,13 @@ import {
   TouchableOpacity,
   Button,
   Alert,
+  Pressable,
 } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { increase, getTodoList } from 'modules';
+import TodoListItem from 'modules/home/components/TodoListItem';
 
-const todoItem = ({ item, onPress, backgroundColor, textColor }: ItemProps) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={[styles.item, { backgroundColor }]}
-  >
-    <Text style={[styles.title, { color: textColor }]}>{item.title}</Text>
-  </TouchableOpacity>
-);
 
 const HomeScreen = (props) => {
   const count = useSelector((state) => state.global.count);
@@ -29,26 +23,16 @@ const HomeScreen = (props) => {
   const dispatch = useDispatch();
   const [flg, setFlg] = useState<boolean>(false);
   useEffect(() => {
-    // 起動時にTODOリスト取得数r
+    // 起動時にTODOリスト取得数
     dispatch(getTodoList());
   }, [dispatch]);
 
-  const renderItem = useCallback((item) => {
-    const { item: item2 } = item || {};
-    const { id, text } = item2 || {};
-    console.log('##### item = ', item);
-    console.log('##### id = ', id);
+  const renderItem = useCallback(({ item }) => {
+    const { text } = item || {};
     console.log('##### text = ', text);
-    return <Text style={{ color: 'black' }}>{text}</Text>;
+  
+    return <TodoListItem item={item} />;
   }, []);
-
-  /*
-  const [flg, setFlg] = useState<boolean>(false);
-
-  useEffect(() => {
-    setFlg(!flg);
-  }, [todoList]);
-*/
 
   console.log('### count home = ', count);
   console.log('### home todoList = ', todoList);

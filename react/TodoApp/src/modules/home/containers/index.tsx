@@ -13,36 +13,30 @@ import {
 } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { increase, getTodoList } from 'modules';
+import { getTodoList } from 'modules';
 import TodoListItem from 'modules/home/components/TodoListItem';
 
-
 const HomeScreen = (props) => {
-  const count = useSelector((state) => state.global.count);
+  const { navigation } = props;
   const todoList = useSelector((state) => state.global.todoList);
   const dispatch = useDispatch();
-  const [flg, setFlg] = useState<boolean>(false);
+
+  console.log('### home todoList = ', todoList);
+
   useEffect(() => {
     // 起動時にTODOリスト取得数
     dispatch(getTodoList());
   }, [dispatch]);
 
   const renderItem = useCallback(({ item }) => {
-    const { text } = item || {};
-    console.log('##### text = ', text);
-  
     return <TodoListItem item={item} />;
   }, []);
 
-  console.log('### count home = ', count);
-  console.log('### home todoList = ', todoList);
-  const { navigation } = props;
   return (
     <>
       <Button
         title="Go to Jane's profile  cccc"
         onPress={() => {
-          dispatch(increase());
           navigation.navigate('Profile', { name: 'Jane' });
         }}
       />

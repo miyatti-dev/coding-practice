@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
 
 const TodoListItem = ({ item }) => {
   const { text } = item || {};
+  console.log('### [TodoListItem] text = ', text);
 
   return (
     <Pressable

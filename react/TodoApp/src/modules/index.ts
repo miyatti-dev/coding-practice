@@ -6,7 +6,7 @@ export type Todo = {
   completed: boolean;
 };
 
-const todoList: Todo[] = [
+const initTodoList: Todo[] = [
   {
     id: 0,
     text: '洗濯物をたたむ',
@@ -15,12 +15,12 @@ const todoList: Todo[] = [
   {
     id: 1,
     text: '食器を洗う',
-    completed: false,
+    completed: true,
   },
   {
     id: 2,
     text: 'ゴミを出す',
-    completed: false,
+    completed: true,
   },
   {
     id: 3,
@@ -40,20 +40,51 @@ const todoList: Todo[] = [
   {
     id: 6,
     text: '塾の送り迎え',
-    completed: false,
+    completed: true,
   },
   {
     id: 7,
     text: 'ご飯を炊く',
     completed: false,
   },
+  {
+    id: 8,
+    text: 'ご飯を炊く2',
+    completed: false,
+  },
+  {
+    id: 9,
+    text: 'ご飯を炊く3',
+    completed: false,
+  },
+  {
+    id: 10,
+    text: 'ご飯を炊く4',
+    completed: false,
+  },
 ];
-let id = 7;
 
 export const getTodoList = createAsyncThunk('global/getTodoList', async () => {
   console.log('#### getTodoList start');
   // TODO：外部から取得するようにする
-  return Promise.resolve([...todoList]);
+  const todoList = [...initTodoList];
+
+  const count = todoList.length;
+  const inCompleteTodoList = [];
+  const completeTodoList = [];
+  for (let i = 0; i < count; i++) {
+    const todo = todoList[i];
+    if (todo.completed === true) {
+      completeTodoList.push(todo);
+    } else {
+      inCompleteTodoList.push(todo);
+    }
+  }
+  return Promise.resolve({
+    todoList,
+    inCompleteTodoList,
+    completeTodoList,
+  });
 });
 
 const counterSlice = createSlice({
@@ -61,23 +92,20 @@ const counterSlice = createSlice({
   initialState: {
     count: 1,
     todoList: [],
+    inCompleteTodoList: [],
+    completeTodoList: [],
   },
-  reducers: {
-    increase: (state, action) => {
-      console.log('## action = ', action);
-      state.count += 1;
-    },
-    decrease: (state, action) => {
-      console.log('## action = ', action);
-      state.count -= 1;
-    },
-  },
+  reducers: {},
   extraReducers: {
     [getTodoList.fulfilled]: (state, action) => {
-      console.log('#### extraReducers getTodoList.fulfilled');
-      console.log('## action = ', action);
-
-      state.todoList = action.payload;
+      const {
+        todoList = [],
+        inCompleteTodoList = [],
+        completeTodoList = [],
+      } = action.payload;
+      state.todoList = todoList;
+      state.inCompleteTodoList = inCompleteTodoList;
+      state.completeTodoList = completeTodoList;
     },
   },
 });

@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "include": ["src"],
+  "extends": "@tsconfig/react-native/tsconfig.json"
+}

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 export type Todo = {
   id: number;
@@ -6,7 +6,7 @@ export type Todo = {
   completed: boolean;
 };
 
-const initTodoList: Todo[] = [
+const initTodoList: Array<Todo> = [
   {
     id: 0,
     text: '洗濯物をたたむ',
@@ -87,29 +87,38 @@ export const getTodoList = createAsyncThunk('global/getTodoList', async () => {
   });
 });
 
+interface TodoState {
+  todoList: Array<Todo>;
+  inCompleteTodoList: Array<Todo>;
+  completeTodoList: Array<Todo>;
+}
+
+// Define the initial state using that type
+const initialState: TodoState = {
+  todoList: [],
+  inCompleteTodoList: [],
+  completeTodoList: [],
+};
+
 const counterSlice = createSlice({
   name: 'global',
-  initialState: {
-    count: 1,
-    todoList: [],
-    inCompleteTodoList: [],
-    completeTodoList: [],
-  },
+  initialState,
   reducers: {},
-  extraReducers: {
-    [getTodoList.fulfilled]: (state, action) => {
-      const {
-        todoList = [],
-        inCompleteTodoList = [],
-        completeTodoList = [],
-      } = action.payload;
-      state.todoList = todoList;
-      state.inCompleteTodoList = inCompleteTodoList;
-      state.completeTodoList = completeTodoList;
-    },
+  extraReducers: (builder) => {
+    builder.addCase(
+      getTodoList.fulfilled,
+      (state: TodoState, action: PayloadAction<TodoState>) => {
+        const {
+          todoList = [],
+          inCompleteTodoList = [],
+          completeTodoList = [],
+        } = action.payload;
+        state.todoList = todoList;
+        state.inCompleteTodoList = inCompleteTodoList;
+        state.completeTodoList = completeTodoList;
+      }
+    );
   },
 });
-
-export const { increase, decrease } = counterSlice.actions;
 
 export default counterSlice.reducer;

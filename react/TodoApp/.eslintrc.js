@@ -17,5 +17,7 @@ module.exports = {
         trailingComma: 'es5',
       },
     ],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
   },
 };

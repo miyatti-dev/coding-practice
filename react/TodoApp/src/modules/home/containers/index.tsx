@@ -1,25 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  FlatList,
-  TouchableOpacity,
-  Button,
-  Alert,
-  Pressable,
-} from 'react-native';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { getTodoList } from 'modules';
+import React, { useEffect, useCallback } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
+import { Button } from '@rneui/themed';
+import { Tab, TabView } from '@rneui/themed';
+import { useAppSelector, useAppDispatch } from 'app/hooks';
+import { Todo, getTodoList } from 'modules';
 import TodoListItem from 'modules/home/components/TodoListItem';
 
-const HomeScreen = (props) => {
+// TODO:navigationの型定義
+type HomeScreenProps = {
+  navigation: any;
+};
+
+const HomeScreen = (props: HomeScreenProps) => {
   const { navigation } = props;
-  const todoList = useSelector((state) => state.global.todoList);
-  const dispatch = useDispatch();
+  const inCompleteTodoList = useAppSelector(
+    (state) => state.global.inCompleteTodoList
+  );
+  const completeTodoList = useAppSelector(
+    (state) => state.global.completeTodoList
+  );
+  const todoList = useAppSelector((state) => state.global.todoList);
+
+  const dispatch = useAppDispatch();
+  const [index, setIndex] = React.useState(0);
 
   console.log('### home todoList = ', todoList);
 
@@ -28,8 +31,8 @@ const HomeScreen = (props) => {
     dispatch(getTodoList());
   }, [dispatch]);
 
-  const renderItem = useCallback(({ item }) => {
-    return <TodoListItem item={item} />;
+  const renderItem = useCallback(({ item }: { item: Todo }) => {
+    return <TodoListItem todoItem={item} />;
   }, []);
 
   return (
@@ -39,45 +42,63 @@ const HomeScreen = (props) => {
         onPress={() => {
           navigation.navigate('Profile', { name: 'Jane' });
         }}
+        type="outline"
       />
-      <FlatList
-        data={todoList}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+
+      <Tab
+        value={index}
+        onChange={(e) => setIndex(e)}
+        indicatorStyle={styles.tabIndicatorStyle}
+        variant="primary"
+      >
+        <Tab.Item
+          title="未完了Todo"
+          icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
+        />
+        <Tab.Item
+          title="完了Todo"
+          icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
+        />
+        <Tab.Item
+          title="全て"
+          icon={{ name: 'cart', type: 'ionicon', color: 'white' }}
+        />
+      </Tab>
+
+      <TabView value={index} onChange={setIndex} animationType="spring">
+        <TabView.Item style={styles.tabViewItem}>
+          <FlatList
+            data={inCompleteTodoList}
+            renderItem={renderItem}
+            keyExtractor={(item: Todo) => String(item.id)}
+          />
+        </TabView.Item>
+        <TabView.Item style={styles.tabViewItem}>
+          <FlatList
+            data={completeTodoList}
+            renderItem={renderItem}
+            keyExtractor={(item: Todo) => String(item.id)}
+          />
+        </TabView.Item>
+        <TabView.Item style={styles.tabViewItem}>
+          <FlatList
+            data={todoList}
+            renderItem={renderItem}
+            keyExtractor={(item: Todo) => String(item.id)}
+          />
+        </TabView.Item>
+      </TabView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  tabIndicatorStyle: {
+    backgroundColor: 'black',
+    height: 5,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
+  tabViewItem: {
+    width: '100%',
   },
 });
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
+import { Todo } from 'modules';
 
-const TodoListItem = ({ item }) => {
-  const { text } = item || {};
+const TodoListItem = ({ todoItem }: { todoItem: Todo }) => {
+  const { text } = todoItem || {};
   console.log('### [TodoListItem] text = ', text);
 
   return (

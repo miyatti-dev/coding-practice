@@ -16,9 +16,13 @@ const App = () => {
           <Stack.Screen
             name="TodoList"
             component={TodoListScreen}
-            options={{ title: 'Todo' }}
+            options={{ title: 'Todo一覧' }}
           />
-          <Stack.Screen name="TodoDetail" component={TodoDetailScreen} />
+          <Stack.Screen
+            name="TodoDetail"
+            component={TodoDetailScreen}
+            options={{ title: 'Todo詳細' }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

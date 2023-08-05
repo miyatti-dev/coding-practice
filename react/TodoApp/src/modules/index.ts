@@ -65,7 +65,6 @@ const initTodoList: Array<Todo> = [
 ];
 
 export const getTodoList = createAsyncThunk('global/getTodoList', async () => {
-  console.log('#### getTodoList start');
   // TODO：外部から取得するようにする
   const todoList = [...initTodoList];
 

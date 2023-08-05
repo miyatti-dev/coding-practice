@@ -1,50 +1,46 @@
 import React, { useEffect, useCallback } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { Button } from '@rneui/themed';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
 import TodoListItem from 'modules/todoList/components/TodoListItem';
 
 // TODO:navigationの型定義
-type HomeScreenProps = {
+type TodoListScreenProps = {
   navigation: any;
 };
 
-const HomeScreen = (props: HomeScreenProps) => {
+const TodoListScreen = (props: TodoListScreenProps) => {
   const { navigation } = props;
+
+  // 未完了Todo
   const inCompleteTodoList = useAppSelector(
     (state) => state.global.inCompleteTodoList
   );
+  // 完了Todo
   const completeTodoList = useAppSelector(
     (state) => state.global.completeTodoList
   );
+  // 全てTodo
   const todoList = useAppSelector((state) => state.global.todoList);
 
   const dispatch = useAppDispatch();
   const [index, setIndex] = React.useState(0);
-
-  console.log('### home todoList = ', todoList);
 
   useEffect(() => {
     // 起動時にTODOリスト取得数
     dispatch(getTodoList());
   }, [dispatch]);
 
-  const renderItem = useCallback(({ item }: { item: Todo }) => {
-    return <TodoListItem todoItem={item} />;
-  }, []);
+  const renderItem = useCallback(
+    ({ item }: { item: Todo }) => {
+      return <TodoListItem navigation={navigation} todoItem={item} />;
+    },
+    [navigation]
+  );
 
   return (
     <>
-      <Button
-        title="Go to Jane's profile  cccc"
-        onPress={() => {
-          navigation.navigate('Profile', { name: 'Jane' });
-        }}
-        type="outline"
-      />
-
       <Tab
         value={index}
         onChange={(e) => setIndex(e)}
@@ -93,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default TodoListScreen;

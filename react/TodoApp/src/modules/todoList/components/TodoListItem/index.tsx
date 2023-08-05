@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
 import { Todo } from 'modules';
 
-const TodoListItem = ({ todoItem }: { todoItem: Todo }) => {
+const TodoListItem = ({
+  navigation,
+  todoItem,
+}: {
+  navigation: any;
+  todoItem: Todo;
+}) => {
   const { text } = todoItem || {};
-  console.log('### [TodoListItem] text = ', text);
+
+  const onPress = useCallback(() => {
+    navigation.navigate('TodoDetail', { todoItem });
+  }, [navigation, todoItem]);
 
   return (
-    <Pressable
-      style={styles.item}
-      onPress={() => console.log('######### onPress')}
-    >
+    <Pressable style={styles.item} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>
     </Pressable>
   );

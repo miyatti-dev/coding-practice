@@ -51,18 +51,9 @@ const HomeScreen = (props: HomeScreenProps) => {
         indicatorStyle={styles.tabIndicatorStyle}
         variant="primary"
       >
-        <Tab.Item
-          title="未完了Todo"
-          icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
-        />
-        <Tab.Item
-          title="完了Todo"
-          icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
-        />
-        <Tab.Item
-          title="全て"
-          icon={{ name: 'cart', type: 'ionicon', color: 'white' }}
-        />
+        <Tab.Item title="未完了" />
+        <Tab.Item title="完了" />
+        <Tab.Item title="全て" />
       </Tab>
 
       <TabView value={index} onChange={setIndex} animationType="spring">

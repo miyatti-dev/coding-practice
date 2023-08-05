@@ -2,8 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from 'modules/home/containers';
-import ProfileScreen from 'modules/profile/containers';
+import TodoListScreen from 'modules/todoList/containers';
+import TodoDetailScreen from 'modules/todoDetail/containers';
 import { store } from './store';
 
 const Stack = createNativeStackNavigator();
@@ -14,11 +14,11 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Home"
-            component={HomeScreen}
+            name="TodoList"
+            component={TodoListScreen}
             options={{ title: 'Todo' }}
           />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="TodoDetail" component={TodoDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

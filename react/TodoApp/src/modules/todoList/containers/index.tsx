@@ -4,7 +4,7 @@ import { Button } from '@rneui/themed';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
-import TodoListItem from 'modules/home/components/TodoListItem';
+import TodoListItem from 'modules/todoList/components/TodoListItem';
 
 // TODO:navigationの型定義
 type HomeScreenProps = {

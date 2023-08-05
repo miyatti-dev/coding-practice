@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
@@ -23,9 +23,13 @@ const TodoListScreen = (props: TodoListScreenProps) => {
   );
   // 全てTodo
   const todoList = useAppSelector((state) => state.global.todoList);
+  // 取得済みかどうか
+  const isFinishGetTodoList = useAppSelector(
+    (state) => state.global.isFinishGetTodoList
+  );
 
   const dispatch = useAppDispatch();
-  const [index, setIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   useEffect(() => {
     // 起動時にTODOリスト取得数
@@ -39,11 +43,36 @@ const TodoListScreen = (props: TodoListScreenProps) => {
     [navigation]
   );
 
+  const keyExtractor = useCallback((item: Todo) => {
+    return String(item.id);
+  }, []);
+
+  const todoListComponent = (todoListData: Array<Todo>) => {
+    if (isFinishGetTodoList) {
+      return (
+        <FlatList
+          data={todoListData}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+        />
+      );
+    }
+    return (
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+
+  const onTabChange = useCallback((index: number) => {
+    setTabIndex(index);
+  }, []);
+
   return (
     <>
       <Tab
-        value={index}
-        onChange={(e) => setIndex(e)}
+        value={tabIndex}
+        onChange={onTabChange}
         indicatorStyle={styles.tabIndicatorStyle}
         variant="primary"
       >
@@ -52,27 +81,15 @@ const TodoListScreen = (props: TodoListScreenProps) => {
         <Tab.Item title="全て" />
       </Tab>
 
-      <TabView value={index} onChange={setIndex} animationType="spring">
+      <TabView value={tabIndex} onChange={setTabIndex} animationType="spring">
         <TabView.Item style={styles.tabViewItem}>
-          <FlatList
-            data={inCompleteTodoList}
-            renderItem={renderItem}
-            keyExtractor={(item: Todo) => String(item.id)}
-          />
+          {todoListComponent(inCompleteTodoList)}
         </TabView.Item>
         <TabView.Item style={styles.tabViewItem}>
-          <FlatList
-            data={completeTodoList}
-            renderItem={renderItem}
-            keyExtractor={(item: Todo) => String(item.id)}
-          />
+          {todoListComponent(completeTodoList)}
         </TabView.Item>
         <TabView.Item style={styles.tabViewItem}>
-          <FlatList
-            data={todoList}
-            renderItem={renderItem}
-            keyExtractor={(item: Todo) => String(item.id)}
-          />
+          {todoListComponent(todoList)}
         </TabView.Item>
       </TabView>
     </>
@@ -86,6 +103,10 @@ const styles = StyleSheet.create({
   },
   tabViewItem: {
     width: '100%',
+  },
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

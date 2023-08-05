@@ -90,6 +90,7 @@ interface TodoState {
   todoList: Array<Todo>;
   inCompleteTodoList: Array<Todo>;
   completeTodoList: Array<Todo>;
+  isFinishGetTodoList: boolean;
 }
 
 // Define the initial state using that type
@@ -97,6 +98,7 @@ const initialState: TodoState = {
   todoList: [],
   inCompleteTodoList: [],
   completeTodoList: [],
+  isFinishGetTodoList: false,
 };
 
 const counterSlice = createSlice({
@@ -106,7 +108,14 @@ const counterSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       getTodoList.fulfilled,
-      (state: TodoState, action: PayloadAction<TodoState>) => {
+      (
+        state: TodoState,
+        action: PayloadAction<{
+          todoList: Array<Todo>;
+          inCompleteTodoList: Array<Todo>;
+          completeTodoList: Array<Todo>;
+        }>
+      ) => {
         const {
           todoList = [],
           inCompleteTodoList = [],
@@ -115,6 +124,7 @@ const counterSlice = createSlice({
         state.todoList = todoList;
         state.inCompleteTodoList = inCompleteTodoList;
         state.completeTodoList = completeTodoList;
+        state.isFinishGetTodoList = true;
       }
     );
   },

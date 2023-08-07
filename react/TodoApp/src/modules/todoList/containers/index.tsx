@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
+import { FlatList, ActivityIndicator, View } from 'react-native';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
 import TodoListItem from 'modules/todoList/components/TodoListItem';
+import { styles } from './styles';
 
 // TODO:navigationの型定義
 type TodoListScreenProps = {
@@ -95,19 +96,5 @@ const TodoListScreen = (props: TodoListScreenProps) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  tabIndicatorStyle: {
-    backgroundColor: 'black',
-    height: 5,
-  },
-  tabViewItem: {
-    width: '100%',
-  },
-  activityIndicatorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-});
 
 export default TodoListScreen;

@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { FlatList, ActivityIndicator, View } from 'react-native';
+import { Icon } from '@rneui/base';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
@@ -69,6 +70,10 @@ const TodoListScreen = (props: TodoListScreenProps) => {
     setTabIndex(index);
   }, []);
 
+  const onPressCreateTodo = useCallback(() => {
+    navigation.navigate('CreateTodo');
+  }, [navigation]);
+
   return (
     <>
       <Tab
@@ -93,6 +98,14 @@ const TodoListScreen = (props: TodoListScreenProps) => {
           {todoListComponent(todoList)}
         </TabView.Item>
       </TabView>
+      <Icon
+        color="#2089dc"
+        name="plus"
+        onPress={onPressCreateTodo}
+        reverse
+        size={30}
+        type="font-awesome-5"
+      />
     </>
   );
 };

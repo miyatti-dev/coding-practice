@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TodoListScreen from 'modules/todoList/containers';
 import TodoDetailScreen from 'modules/todoDetail/containers';
+import CreateTodoScreen from 'modules/createTodo/containers';
 import { store } from './store';
 
 const Stack = createNativeStackNavigator();
@@ -12,7 +13,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="TodoList">
           <Stack.Screen
             name="TodoList"
             component={TodoListScreen}
@@ -22,6 +23,11 @@ const App = () => {
             name="TodoDetail"
             component={TodoDetailScreen}
             options={{ title: 'Todo詳細' }}
+          />
+          <Stack.Screen
+            name="CreateTodo"
+            component={CreateTodoScreen}
+            options={{ title: 'Create Todo' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

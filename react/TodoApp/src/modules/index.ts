@@ -64,9 +64,22 @@ const initTodoList: Array<Todo> = [
   },
 ];
 
-export const getTodoList = createAsyncThunk('global/getTodoList', async () => {
+export const getTodoList = createAsyncThunk<
+  {
+    todoList: Array<Todo>;
+    inCompleteTodoList: Array<Todo>;
+    completeTodoList: Array<Todo>;
+  },
+  undefined,
+  {
+    state: { global: TodoState };
+  }
+>('global/getTodoList', async (_, { getState }) => {
+  const stateTodoList = getState().global.todoList;
+
   // TODO：外部から取得するようにする
-  const todoList = [...initTodoList];
+  const todoList =
+    stateTodoList.length === 0 ? [...initTodoList] : stateTodoList;
 
   const count = todoList.length;
   const inCompleteTodoList = [];
@@ -104,7 +117,15 @@ const initialState: TodoState = {
 const counterSlice = createSlice({
   name: 'global',
   initialState,
-  reducers: {},
+  reducers: {
+    postTodo: (state, action) => {
+      state.todoList.push({
+        id: state.todoList.length,
+        text: action.payload?.todo,
+        completed: false,
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(
       getTodoList.fulfilled,
@@ -129,5 +150,7 @@ const counterSlice = createSlice({
     );
   },
 });
+
+export const { postTodo } = counterSlice.actions;
 
 export default counterSlice.reducer;

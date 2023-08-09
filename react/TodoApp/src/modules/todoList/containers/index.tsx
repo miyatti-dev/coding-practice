@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FlatList, ActivityIndicator, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Icon } from '@rneui/base';
 import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
@@ -31,12 +32,14 @@ const TodoListScreen = (props: TodoListScreenProps) => {
   );
 
   const dispatch = useAppDispatch();
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
 
-  useEffect(() => {
-    // 起動時にTODOリスト取得数
-    dispatch(getTodoList());
-  }, [dispatch]);
+  // フォーカス時にTodoListを取得
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getTodoList());
+    }, [dispatch])
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: Todo }) => {

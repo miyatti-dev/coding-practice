@@ -101,14 +101,16 @@ const TodoListScreen = () => {
           {todoListComponent(todoList)}
         </TabView.Item>
       </TabView>
-      <Icon
-        color="#2089dc"
-        name="plus"
-        onPress={onPressCreateTodo}
-        reverse
-        size={30}
-        type="font-awesome-5"
-      />
+      <View style={styles.plusIconContainer}>
+        <Icon
+          color="#2089dc"
+          name="plus"
+          onPress={onPressCreateTodo}
+          reverse
+          size={30}
+          type="font-awesome-5"
+        />
+      </View>
     </>
   );
 };

@@ -17,4 +17,8 @@ export const styles = StyleSheet.create({
   text: {
     color: 'black',
   },
+  checkbox: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
 });

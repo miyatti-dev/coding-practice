@@ -125,6 +125,40 @@ const counterSlice = createSlice({
         completed: false,
       });
     },
+    completeTodo: (state, action) => {
+      const todoId = action.payload?.id;
+
+      const foundTodo = state.todoList.find((todo) => todo.id === todoId);
+      if (foundTodo) {
+        // 完了にする
+        foundTodo.completed = true;
+
+        // 完了リストに追加
+        state.completeTodoList.push(foundTodo);
+
+        // 未完了リストから除外
+        state.inCompleteTodoList = state.inCompleteTodoList.filter(
+          (todo) => todo.id !== todoId
+        );
+      }
+    },
+    inCompleteTodo: (state, action) => {
+      const todoId = action.payload?.id;
+
+      const foundTodo = state.todoList.find((todo) => todo.id === todoId);
+      if (foundTodo) {
+        // 未完了にする
+        foundTodo.completed = false;
+
+        // 未完了リストに追加
+        state.inCompleteTodoList.push(foundTodo);
+
+        // 完了リストから除外
+        state.completeTodoList = state.completeTodoList.filter(
+          (todo) => todo.id !== todoId
+        );
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -151,6 +185,6 @@ const counterSlice = createSlice({
   },
 });
 
-export const { postTodo } = counterSlice.actions;
+export const { postTodo, completeTodo, inCompleteTodo } = counterSlice.actions;
 
 export default counterSlice.reducer;

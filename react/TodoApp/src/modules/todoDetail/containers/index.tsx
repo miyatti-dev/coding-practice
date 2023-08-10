@@ -1,10 +1,15 @@
 import React from 'react';
 import { Text } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from 'app';
 
-// TODO:route型定義
-const TodoDetailScreen = ({ route }: { route: any }) => {
-  const { todoItem } = route.params || {};
-  const { text } = todoItem || {};
+type TodoDetailScreenRouteProp = RouteProp<RootStackParamList, 'TodoDetail'>;
+
+const TodoDetailScreen = () => {
+  const route = useRoute<TodoDetailScreenRouteProp>();
+  const { todo } = route.params || {};
+  const { text } = todo || {};
+
   return <Text>{text}</Text>;
 };
 

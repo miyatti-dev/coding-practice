@@ -2,12 +2,19 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Todo } from 'modules';
 import TodoListScreen from 'modules/todoList/containers';
 import TodoDetailScreen from 'modules/todoDetail/containers';
 import CreateTodoScreen from 'modules/createTodo/containers';
 import { store } from './store';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  TodoList: undefined;
+  TodoDetail: { todo: Todo };
+  CreateTodo: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
   return (

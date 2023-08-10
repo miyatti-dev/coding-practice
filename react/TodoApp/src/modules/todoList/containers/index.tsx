@@ -1,20 +1,20 @@
 import React, { useState, useCallback } from 'react';
 import { FlatList, ActivityIndicator, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Icon } from '@rneui/base';
 import { Tab, TabView } from '@rneui/themed';
+import { RootStackParamList } from 'app';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Todo, getTodoList } from 'modules';
 import TodoListItem from 'modules/todoList/components/TodoListItem';
 import { styles } from './styles';
 
-// TODO:navigationの型定義
-type TodoListScreenProps = {
-  navigation: any;
-};
-
-const TodoListScreen = (props: TodoListScreenProps) => {
-  const { navigation } = props;
+const TodoListScreen = () => {
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<RootStackParamList, 'CreateTodo'>
+    >();
 
   // 未完了Todo
   const inCompleteTodoList = useAppSelector(
@@ -43,7 +43,7 @@ const TodoListScreen = (props: TodoListScreenProps) => {
 
   const renderItem = useCallback(
     ({ item }: { item: Todo }) => {
-      return <TodoListItem navigation={navigation} todoItem={item} />;
+      return <TodoListItem navigation={navigation} todo={item} />;
     },
     [navigation]
   );

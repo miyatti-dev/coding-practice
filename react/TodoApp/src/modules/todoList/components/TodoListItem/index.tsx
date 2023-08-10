@@ -5,16 +5,16 @@ import { styles } from './styles';
 
 const TodoListItem = ({
   navigation,
-  todoItem,
+  todo,
 }: {
   navigation: any;
-  todoItem: Todo;
+  todo: Todo;
 }) => {
-  const { text } = todoItem || {};
+  const { text } = todo || {};
 
   const onPress = useCallback(() => {
-    navigation.navigate('TodoDetail', { todoItem });
-  }, [navigation, todoItem]);
+    navigation.navigate('TodoDetail', { todo });
+  }, [navigation, todo]);
 
   return (
     <Pressable style={styles.item} onPress={onPress}>

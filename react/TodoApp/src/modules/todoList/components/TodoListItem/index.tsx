@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Text, Pressable } from 'react-native';
 import { useAppDispatch } from 'app/hooks';
 import { Todo } from 'modules';
@@ -14,14 +14,40 @@ const TodoListItem = ({
   todo: Todo;
 }) => {
   const { id, text, completed } = todo || {};
+
   const dispatch = useAppDispatch();
+  const timerId = useRef<ReturnType<typeof setTimeout>>();
+  const [stateCompleted, setStateCompleted] = useState(completed);
+
+  useEffect(() => {
+    return () => {
+      // タイマーのクリア
+      if (timerId.current) {
+        clearTimeout(timerId.current);
+        timerId.current = undefined;
+      }
+    };
+  }, []);
 
   const onPressCheckBox = useCallback(() => {
-    if (completed) {
-      dispatch(inCompleteTodo({ id }));
-    } else {
-      dispatch(completeTodo({ id }));
+    const processTodo = () => {
+      if (completed) {
+        // 未完了に戻す
+        dispatch(inCompleteTodo({ id }));
+      } else {
+        // 完了にする
+        dispatch(completeTodo({ id }));
+      }
+    };
+
+    if (timerId.current) {
+      clearTimeout(timerId.current);
+      timerId.current = undefined;
     }
+
+    // チェック状態の変化を見せたいので、setTimeoutで処理を遅らせる
+    timerId.current = setTimeout(processTodo, 700);
+    setStateCompleted(!completed);
   }, [dispatch, id, completed]);
 
   const onPressListItem = useCallback(() => {
@@ -31,7 +57,7 @@ const TodoListItem = ({
   return (
     <Pressable style={styles.item} onPress={onPressListItem}>
       <CheckBox
-        checked={completed}
+        checked={stateCompleted}
         containerStyle={styles.checkbox}
         onPress={onPressCheckBox}
       />

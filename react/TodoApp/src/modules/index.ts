@@ -64,6 +64,27 @@ const initTodoList: Array<Todo> = [
   },
 ];
 
+const createTodoList = (todoList: Array<Todo>) => {
+  const todoListLength = todoList.length;
+  const inCompleteTodoList = [];
+  const completeTodoList = [];
+
+  for (let i = 0; i < todoListLength; i++) {
+    const todo = todoList[i];
+    if (todo.completed === true) {
+      completeTodoList.push(todo);
+    } else {
+      inCompleteTodoList.push(todo);
+    }
+  }
+
+  return {
+    todoList,
+    inCompleteTodoList,
+    completeTodoList,
+  };
+};
+
 export const getTodoList = createAsyncThunk<
   {
     todoList: Array<Todo>;
@@ -81,22 +102,7 @@ export const getTodoList = createAsyncThunk<
   const todoList =
     stateTodoList.length === 0 ? [...initTodoList] : stateTodoList;
 
-  const count = todoList.length;
-  const inCompleteTodoList = [];
-  const completeTodoList = [];
-  for (let i = 0; i < count; i++) {
-    const todo = todoList[i];
-    if (todo.completed === true) {
-      completeTodoList.push(todo);
-    } else {
-      inCompleteTodoList.push(todo);
-    }
-  }
-  return Promise.resolve({
-    todoList,
-    inCompleteTodoList,
-    completeTodoList,
-  });
+  return Promise.resolve(createTodoList(todoList));
 });
 
 interface TodoState {
@@ -119,45 +125,67 @@ const counterSlice = createSlice({
   initialState,
   reducers: {
     postTodo: (state, action) => {
+      const { todoList = [] } = state;
+      const todoListLength = todoList.length;
+
+      // newId
+      let newId = 0;
+      if (todoListLength > 0) {
+        const todo = todoList[todoListLength - 1];
+        const { id = 0 } = todo || {};
+        newId = id + 1;
+      }
+
+      // Todoを追加
       state.todoList.push({
-        id: state.todoList.length,
+        id: newId,
         text: action.payload?.todo,
         completed: false,
       });
     },
     completeTodo: (state, action) => {
       const todoId = action.payload?.id;
+      const stateTodoList = state.todoList;
 
-      const foundTodo = state.todoList.find((todo) => todo.id === todoId);
+      // 同じIdがあれば、完了にする
+      const foundTodo = stateTodoList.find((todo) => todo.id === todoId);
       if (foundTodo) {
-        // 完了にする
         foundTodo.completed = true;
-
-        // 完了リストに追加
-        state.completeTodoList.push(foundTodo);
-
-        // 未完了リストから除外
-        state.inCompleteTodoList = state.inCompleteTodoList.filter(
-          (todo) => todo.id !== todoId
-        );
       }
+
+      const { todoList, inCompleteTodoList, completeTodoList } =
+        createTodoList(stateTodoList);
+      state.todoList = todoList;
+      state.inCompleteTodoList = inCompleteTodoList;
+      state.completeTodoList = completeTodoList;
     },
     inCompleteTodo: (state, action) => {
       const todoId = action.payload?.id;
+      const stateTodoList = state.todoList;
 
+      // 同じIdがあれば、未完了に戻す
       const foundTodo = state.todoList.find((todo) => todo.id === todoId);
       if (foundTodo) {
-        // 未完了にする
         foundTodo.completed = false;
-
-        // 未完了リストに追加
-        state.inCompleteTodoList.push(foundTodo);
-
-        // 完了リストから除外
-        state.completeTodoList = state.completeTodoList.filter(
-          (todo) => todo.id !== todoId
-        );
       }
+
+      const { todoList, inCompleteTodoList, completeTodoList } =
+        createTodoList(stateTodoList);
+      state.todoList = todoList;
+      state.inCompleteTodoList = inCompleteTodoList;
+      state.completeTodoList = completeTodoList;
+    },
+    deleteTodo: (state, action) => {
+      const todoId = action.payload?.id;
+
+      // 指定のIdを除外したTodoList
+      const tmpTodoList = state.todoList.filter((todo) => todo.id !== todoId);
+
+      const { todoList, inCompleteTodoList, completeTodoList } =
+        createTodoList(tmpTodoList);
+      state.todoList = todoList;
+      state.inCompleteTodoList = inCompleteTodoList;
+      state.completeTodoList = completeTodoList;
     },
   },
   extraReducers: (builder) => {
@@ -185,6 +213,7 @@ const counterSlice = createSlice({
   },
 });
 
-export const { postTodo, completeTodo, inCompleteTodo } = counterSlice.actions;
+export const { postTodo, completeTodo, inCompleteTodo, deleteTodo } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;

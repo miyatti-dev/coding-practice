@@ -9,9 +9,11 @@ import { styles } from './styles';
 const TodoListItem = ({
   navigation,
   todo,
+  showUndoButton,
 }: {
   navigation: any;
   todo: Todo;
+  showUndoButton: (todo: Todo) => void;
 }) => {
   const { id, text, completed } = todo || {};
 
@@ -31,6 +33,7 @@ const TodoListItem = ({
 
   const onPressCheckBox = useCallback(() => {
     const processTodo = () => {
+      showUndoButton({ id, text, completed });
       if (completed) {
         // 未完了に戻す
         dispatch(inCompleteTodo({ id }));
@@ -46,9 +49,9 @@ const TodoListItem = ({
     }
 
     // チェック状態の変化を見せたいので、setTimeoutで処理を遅らせる
-    timerId.current = setTimeout(processTodo, 700);
+    timerId.current = setTimeout(processTodo, 500);
     setStateCompleted(!completed);
-  }, [dispatch, id, completed]);
+  }, [dispatch, showUndoButton, id, text, completed]);
 
   const onPressListItem = useCallback(() => {
     navigation.navigate('TodoDetail', { todo });

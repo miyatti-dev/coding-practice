@@ -187,6 +187,22 @@ const counterSlice = createSlice({
       state.inCompleteTodoList = inCompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
+    undoTodo: (state, action) => {
+      const todoId = action.payload?.id;
+      const stateTodoList = state.todoList;
+
+      // 同じIdがあれば、逆にする
+      const foundTodo = stateTodoList.find((todo) => todo.id === todoId);
+      if (foundTodo) {
+        foundTodo.completed = !foundTodo.completed;
+      }
+
+      const { todoList, inCompleteTodoList, completeTodoList } =
+        createTodoList(stateTodoList);
+      state.todoList = todoList;
+      state.inCompleteTodoList = inCompleteTodoList;
+      state.completeTodoList = completeTodoList;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -213,7 +229,7 @@ const counterSlice = createSlice({
   },
 });
 
-export const { postTodo, completeTodo, inCompleteTodo, deleteTodo } =
+export const { postTodo, completeTodo, inCompleteTodo, deleteTodo, undoTodo } =
   counterSlice.actions;
 
 export default counterSlice.reducer;

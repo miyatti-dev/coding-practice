@@ -31,6 +31,10 @@ const TodoListItem = ({
     };
   }, []);
 
+  useEffect(() => {
+    setStateCompleted(completed);
+  }, [completed]);
+
   const onPressCheckBox = useCallback(() => {
     const processTodo = () => {
       showUndoButton({ id, text, completed });

@@ -17,8 +17,8 @@ const TodoListScreen = () => {
     >();
 
   // 未完了Todo
-  const inCompleteTodoList = useAppSelector(
-    (state) => state.global.inCompleteTodoList
+  const incompleteTodoList = useAppSelector(
+    (state) => state.global.incompleteTodoList
   );
   // 完了Todo
   const completeTodoList = useAppSelector(
@@ -67,7 +67,7 @@ const TodoListScreen = () => {
       <TabView value={tabIndex} onChange={setTabIndex} animationType="spring">
         <TabView.Item style={styles.tabViewItem}>
           <TodoList
-            todoListData={inCompleteTodoList}
+            todoListData={incompleteTodoList}
             isFinishGetTodoList={isFinishGetTodoList}
           />
         </TabView.Item>

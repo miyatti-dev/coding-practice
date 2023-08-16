@@ -66,7 +66,7 @@ const initTodoList: Array<Todo> = [
 
 const createTodoList = (todoList: Array<Todo>) => {
   const todoListLength = todoList.length;
-  const inCompleteTodoList = [];
+  const incompleteTodoList = [];
   const completeTodoList = [];
 
   for (let i = 0; i < todoListLength; i++) {
@@ -74,13 +74,13 @@ const createTodoList = (todoList: Array<Todo>) => {
     if (todo.completed === true) {
       completeTodoList.push(todo);
     } else {
-      inCompleteTodoList.push(todo);
+      incompleteTodoList.push(todo);
     }
   }
 
   return {
     todoList,
-    inCompleteTodoList,
+    incompleteTodoList,
     completeTodoList,
   };
 };
@@ -88,7 +88,7 @@ const createTodoList = (todoList: Array<Todo>) => {
 export const getTodoList = createAsyncThunk<
   {
     todoList: Array<Todo>;
-    inCompleteTodoList: Array<Todo>;
+    incompleteTodoList: Array<Todo>;
     completeTodoList: Array<Todo>;
   },
   undefined,
@@ -107,7 +107,7 @@ export const getTodoList = createAsyncThunk<
 
 interface TodoState {
   todoList: Array<Todo>;
-  inCompleteTodoList: Array<Todo>;
+  incompleteTodoList: Array<Todo>;
   completeTodoList: Array<Todo>;
   isFinishGetTodoList: boolean;
 }
@@ -115,7 +115,7 @@ interface TodoState {
 // Define the initial state using that type
 const initialState: TodoState = {
   todoList: [],
-  inCompleteTodoList: [],
+  incompleteTodoList: [],
   completeTodoList: [],
   isFinishGetTodoList: false,
 };
@@ -153,10 +153,10 @@ const counterSlice = createSlice({
         foundTodo.completed = true;
       }
 
-      const { todoList, inCompleteTodoList, completeTodoList } =
+      const { todoList, incompleteTodoList, completeTodoList } =
         createTodoList(stateTodoList);
       state.todoList = todoList;
-      state.inCompleteTodoList = inCompleteTodoList;
+      state.incompleteTodoList = incompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
     inCompleteTodo: (state, action) => {
@@ -169,10 +169,10 @@ const counterSlice = createSlice({
         foundTodo.completed = false;
       }
 
-      const { todoList, inCompleteTodoList, completeTodoList } =
+      const { todoList, incompleteTodoList, completeTodoList } =
         createTodoList(stateTodoList);
       state.todoList = todoList;
-      state.inCompleteTodoList = inCompleteTodoList;
+      state.incompleteTodoList = incompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
     deleteTodo: (state, action) => {
@@ -181,10 +181,10 @@ const counterSlice = createSlice({
       // 指定のIdを除外したTodoList
       const tmpTodoList = state.todoList.filter((todo) => todo.id !== todoId);
 
-      const { todoList, inCompleteTodoList, completeTodoList } =
+      const { todoList, incompleteTodoList, completeTodoList } =
         createTodoList(tmpTodoList);
       state.todoList = todoList;
-      state.inCompleteTodoList = inCompleteTodoList;
+      state.incompleteTodoList = incompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
     undoTodo: (state, action) => {
@@ -197,10 +197,10 @@ const counterSlice = createSlice({
         foundTodo.completed = !foundTodo.completed;
       }
 
-      const { todoList, inCompleteTodoList, completeTodoList } =
+      const { todoList, incompleteTodoList, completeTodoList } =
         createTodoList(stateTodoList);
       state.todoList = todoList;
-      state.inCompleteTodoList = inCompleteTodoList;
+      state.incompleteTodoList = incompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
   },
@@ -211,17 +211,17 @@ const counterSlice = createSlice({
         state: TodoState,
         action: PayloadAction<{
           todoList: Array<Todo>;
-          inCompleteTodoList: Array<Todo>;
+          incompleteTodoList: Array<Todo>;
           completeTodoList: Array<Todo>;
         }>
       ) => {
         const {
           todoList = [],
-          inCompleteTodoList = [],
+          incompleteTodoList = [],
           completeTodoList = [],
         } = action.payload;
         state.todoList = todoList;
-        state.inCompleteTodoList = inCompleteTodoList;
+        state.incompleteTodoList = incompleteTodoList;
         state.completeTodoList = completeTodoList;
         state.isFinishGetTodoList = true;
       }

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Text, Pressable } from 'react-native';
+import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { useAppDispatch } from 'app/hooks';
 import { Todo } from 'modules';
 import { CheckBox } from '@rneui/themed';
@@ -10,10 +11,12 @@ const TodoListItem = ({
   navigation,
   todo,
   showUndoButton,
+  drag,
 }: {
   navigation: any;
   todo: Todo;
   showUndoButton: (todo: Todo) => void;
+  drag: () => void;
 }) => {
   const { id, text, completed } = todo || {};
 
@@ -62,14 +65,20 @@ const TodoListItem = ({
   }, [navigation, todo]);
 
   return (
-    <Pressable style={styles.item} onPress={onPressListItem}>
-      <CheckBox
-        checked={stateCompleted}
-        containerStyle={styles.checkbox}
-        onPress={onPressCheckBox}
-      />
-      <Text style={styles.text}>{text}</Text>
-    </Pressable>
+    <ScaleDecorator>
+      <Pressable
+        style={styles.item}
+        onPress={onPressListItem}
+        onLongPress={drag}
+      >
+        <CheckBox
+          checked={stateCompleted}
+          containerStyle={styles.checkbox}
+          onPress={onPressCheckBox}
+        />
+        <Text style={styles.text}>{text}</Text>
+      </Pressable>
+    </ScaleDecorator>
   );
 };
 

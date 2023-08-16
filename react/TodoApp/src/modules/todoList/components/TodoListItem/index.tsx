@@ -4,7 +4,7 @@ import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { useAppDispatch } from 'app/hooks';
 import { Todo } from 'modules';
 import { CheckBox } from '@rneui/themed';
-import { completeTodo, inCompleteTodo } from 'modules';
+import { completeTodo, incompleteTodo } from 'modules';
 import { styles } from './styles';
 
 const TodoListItem = ({
@@ -43,7 +43,7 @@ const TodoListItem = ({
       showUndoButton({ id, text, completed });
       if (completed) {
         // 未完了に戻す
-        dispatch(inCompleteTodo({ id }));
+        dispatch(incompleteTodo({ id }));
       } else {
         // 完了にする
         dispatch(completeTodo({ id }));

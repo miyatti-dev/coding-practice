@@ -112,7 +112,6 @@ interface TodoState {
   isFinishGetTodoList: boolean;
 }
 
-// Define the initial state using that type
 const initialState: TodoState = {
   todoList: [],
   incompleteTodoList: [],
@@ -120,7 +119,7 @@ const initialState: TodoState = {
   isFinishGetTodoList: false,
 };
 
-const counterSlice = createSlice({
+const todoSlice = createSlice({
   name: 'global',
   initialState,
   reducers: {
@@ -159,7 +158,7 @@ const counterSlice = createSlice({
       state.incompleteTodoList = incompleteTodoList;
       state.completeTodoList = completeTodoList;
     },
-    inCompleteTodo: (state, action) => {
+    incompleteTodo: (state, action) => {
       const todoId = action.payload?.id;
       const stateTodoList = state.todoList;
 
@@ -229,7 +228,7 @@ const counterSlice = createSlice({
   },
 });
 
-export const { postTodo, completeTodo, inCompleteTodo, deleteTodo, undoTodo } =
-  counterSlice.actions;
+export const { postTodo, completeTodo, incompleteTodo, deleteTodo, undoTodo } =
+  todoSlice.actions;
 
-export default counterSlice.reducer;
+export default todoSlice.reducer;

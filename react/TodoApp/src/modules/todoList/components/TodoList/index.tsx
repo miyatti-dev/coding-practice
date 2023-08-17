@@ -9,14 +9,28 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Button } from '@rneui/themed';
 import { RootStackParamList } from 'app';
 import { useAppDispatch } from 'app/hooks';
-import { Todo, undoTodo } from 'modules';
+import {
+  Todo,
+  undoTodo,
+  setIncompleteTodoList,
+  setCompleteTodoList,
+  setTodoList,
+} from 'modules';
 import TodoListItem from 'modules/todoList/components/TodoListItem';
 import { styles } from './styles';
 
+export enum TodoListType {
+  incomplete,
+  complete,
+  all,
+}
+
 const TodoList = ({
+  type,
   todoListData,
   isFinishGetTodoList,
 }: {
+  type: TodoListType;
   todoListData: Array<Todo>;
   isFinishGetTodoList: boolean;
 }) => {
@@ -28,11 +42,20 @@ const TodoList = ({
   const dispatch = useAppDispatch();
   // TODO：Redux側の並び順も変えないとダメだ。。。
   const [data, setData] = useState(todoListData);
-  const [undoInfo, setUndoInfo] = useState<{ visible: boolean; todo?: Todo }>({
+  const [undoInfo, setUndoInfo] = useState<{
+    visible: boolean;
+    todo?: Todo;
+    index: number;
+  }>({
     visible: false,
     todo: undefined,
+    index: 0,
   });
-  const { visible: visibleUndoButton, todo: undoTodoInfo } = undoInfo;
+  const {
+    visible: visibleUndoButton,
+    todo: undoTodoInfo,
+    index: undoTodoIndex,
+  } = undoInfo;
   const { id, completed = false } = undoTodoInfo || {};
 
   // propsのtodoListDataが更新されたら、stateも更新する
@@ -41,24 +64,28 @@ const TodoList = ({
   }, [todoListData]);
 
   // 「もとに戻す」ボタン表示
-  const showUndoButton = useCallback((todo: Todo) => {
-    setUndoInfo({ visible: true, todo });
+  const showUndoButton = useCallback(
+    ({ todo, index }: { todo: Todo; index: number }) => {
+      setUndoInfo({ visible: true, todo, index });
 
-    // 2秒後に表示を消す
-    setTimeout(() => {
-      setUndoInfo({ visible: false, todo: undefined });
-    }, 2000);
-  }, []);
+      // 2秒後に表示を消す
+      setTimeout(() => {
+        setUndoInfo({ visible: false, todo: undefined, index: 0 });
+      }, 2000);
+    },
+    []
+  );
 
   // renderItem
   const renderItem = useCallback(
-    ({ item, drag }: RenderItemParams<Todo>) => {
+    ({ item, drag, getIndex }: RenderItemParams<Todo>) => {
       return (
         <TodoListItem
           navigation={navigation}
+          index={getIndex()}
           todo={item}
-          drag={drag}
           showUndoButton={showUndoButton}
+          drag={drag}
         />
       );
     },
@@ -71,9 +98,28 @@ const TodoList = ({
 
   // Undoボタン
   const onPressUndoTodo = useCallback(() => {
-    dispatch(undoTodo({ id }));
-    setUndoInfo({ visible: false, todo: undefined });
-  }, [dispatch, id]);
+    dispatch(undoTodo({ id, index: undoTodoIndex }));
+    setUndoInfo({ visible: false, todo: undefined, index: 0 });
+  }, [dispatch, id, undoTodoIndex]);
+
+  const onDragEnd = useCallback(
+    ({ data: todoList }: { data: Array<Todo> }) => {
+      switch (type) {
+        case TodoListType.incomplete:
+          dispatch(setIncompleteTodoList({ incompleteTodoList: todoList }));
+          break;
+        case TodoListType.complete:
+          dispatch(setCompleteTodoList({ completeTodoList: todoList }));
+          break;
+        case TodoListType.all:
+          dispatch(setTodoList({ todoList: todoList }));
+          break;
+        default:
+          break;
+      }
+    },
+    [dispatch, type]
+  );
 
   if (!isFinishGetTodoList) {
     return (
@@ -88,9 +134,10 @@ const TodoList = ({
       <GestureHandlerRootView>
         <DraggableFlatList
           data={data}
+          extraData={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          onDragEnd={({ data: d }) => setData(d)}
+          onDragEnd={onDragEnd}
         />
       </GestureHandlerRootView>
       {visibleUndoButton && (

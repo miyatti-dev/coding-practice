@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Icon } from '@rneui/base';
 import { Tab, TabView } from '@rneui/themed';
 import { RootStackParamList } from 'app';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { getTodoList } from 'modules';
-import TodoList from 'modules/todoList/components/TodoList';
+import TodoList, { TodoListType } from 'modules/todoList/components/TodoList';
 import { styles } from './styles';
 
 const TodoListScreen = () => {
@@ -34,12 +34,9 @@ const TodoListScreen = () => {
   const dispatch = useAppDispatch();
   const [tabIndex, setTabIndex] = useState(0);
 
-  // フォーカス時にTodoListを取得
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(getTodoList());
-    }, [dispatch])
-  );
+  useEffect(() => {
+    dispatch(getTodoList());
+  }, [dispatch]);
 
   // タブ切り替え
   const onTabChange = useCallback((index: number) => {
@@ -67,18 +64,21 @@ const TodoListScreen = () => {
       <TabView value={tabIndex} onChange={setTabIndex} animationType="spring">
         <TabView.Item style={styles.tabViewItem}>
           <TodoList
+            type={TodoListType.incomplete}
             todoListData={incompleteTodoList}
             isFinishGetTodoList={isFinishGetTodoList}
           />
         </TabView.Item>
         <TabView.Item style={styles.tabViewItem}>
           <TodoList
+            type={TodoListType.complete}
             todoListData={completeTodoList}
             isFinishGetTodoList={isFinishGetTodoList}
           />
         </TabView.Item>
         <TabView.Item style={styles.tabViewItem}>
           <TodoList
+            type={TodoListType.all}
             todoListData={todoList}
             isFinishGetTodoList={isFinishGetTodoList}
           />

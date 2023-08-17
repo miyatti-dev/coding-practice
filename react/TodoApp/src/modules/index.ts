@@ -106,16 +106,16 @@ export const getTodoList = createAsyncThunk<
 });
 
 interface TodoState {
-  todoList: Array<Todo>;
   incompleteTodoList: Array<Todo>;
   completeTodoList: Array<Todo>;
+  todoList: Array<Todo>;
   isFinishGetTodoList: boolean;
 }
 
 const initialState: TodoState = {
-  todoList: [],
   incompleteTodoList: [],
   completeTodoList: [],
+  todoList: [],
   isFinishGetTodoList: false,
 };
 
@@ -135,72 +135,114 @@ const todoSlice = createSlice({
         newId = id + 1;
       }
 
-      // Todoを追加
-      state.todoList.push({
+      const newTodo = {
         id: newId,
         text: action.payload?.todo,
         completed: false,
-      });
+      };
+
+      // Todoを追加
+      state.todoList.push(newTodo);
+      state.incompleteTodoList.push(newTodo);
     },
     completeTodo: (state, action) => {
       const todoId = action.payload?.id;
-      const stateTodoList = state.todoList;
 
       // 同じIdがあれば、完了にする
-      const foundTodo = stateTodoList.find((todo) => todo.id === todoId);
+      const foundTodo = state.todoList.find((todo) => todo.id === todoId);
       if (foundTodo) {
         foundTodo.completed = true;
-      }
 
-      const { todoList, incompleteTodoList, completeTodoList } =
-        createTodoList(stateTodoList);
-      state.todoList = todoList;
-      state.incompleteTodoList = incompleteTodoList;
-      state.completeTodoList = completeTodoList;
+        // 完了リストに追加
+        state.completeTodoList.push(foundTodo);
+
+        // 未完了リストから除外
+        state.incompleteTodoList = state.incompleteTodoList.filter(
+          (todo) => todo.id !== todoId
+        );
+      }
     },
     incompleteTodo: (state, action) => {
       const todoId = action.payload?.id;
-      const stateTodoList = state.todoList;
 
       // 同じIdがあれば、未完了に戻す
       const foundTodo = state.todoList.find((todo) => todo.id === todoId);
       if (foundTodo) {
         foundTodo.completed = false;
-      }
 
-      const { todoList, incompleteTodoList, completeTodoList } =
-        createTodoList(stateTodoList);
-      state.todoList = todoList;
-      state.incompleteTodoList = incompleteTodoList;
-      state.completeTodoList = completeTodoList;
+        // 未完了リストに追加
+        state.incompleteTodoList.push(foundTodo);
+
+        // 完了リストから除外
+        state.completeTodoList = state.completeTodoList.filter(
+          (todo) => todo.id !== todoId
+        );
+      }
     },
     deleteTodo: (state, action) => {
       const todoId = action.payload?.id;
 
       // 指定のIdを除外したTodoList
       const tmpTodoList = state.todoList.filter((todo) => todo.id !== todoId);
+      const tmpIncompleteTodoList = state.incompleteTodoList.filter(
+        (todo) => todo.id !== todoId
+      );
+      const tmpCompleteTodoList = state.completeTodoList.filter(
+        (todo) => todo.id !== todoId
+      );
 
-      const { todoList, incompleteTodoList, completeTodoList } =
-        createTodoList(tmpTodoList);
-      state.todoList = todoList;
-      state.incompleteTodoList = incompleteTodoList;
-      state.completeTodoList = completeTodoList;
+      state.todoList = tmpTodoList;
+      state.incompleteTodoList = tmpIncompleteTodoList;
+      state.completeTodoList = tmpCompleteTodoList;
     },
     undoTodo: (state, action) => {
-      const todoId = action.payload?.id;
-      const stateTodoList = state.todoList;
+      const { id: todoId, index = 0 } = action.payload || {};
 
       // 同じIdがあれば、逆にする
-      const foundTodo = stateTodoList.find((todo) => todo.id === todoId);
+      const foundTodo = state.todoList.find((todo) => todo.id === todoId);
       if (foundTodo) {
+        const prevCompleted = foundTodo.completed;
         foundTodo.completed = !foundTodo.completed;
-      }
 
-      const { todoList, incompleteTodoList, completeTodoList } =
-        createTodoList(stateTodoList);
-      state.todoList = todoList;
-      state.incompleteTodoList = incompleteTodoList;
-      state.completeTodoList = completeTodoList;
+        if (prevCompleted) {
+          // 完了を未完了に戻す
+
+          // 未完了に追加
+          if (index < state.incompleteTodoList.length) {
+            state.incompleteTodoList.splice(index, 0, foundTodo);
+          } else {
+            state.incompleteTodoList.push(foundTodo);
+          }
+
+          // 完了リストから除外
+          state.completeTodoList = state.completeTodoList.filter(
+            (todo) => todo.id !== todoId
+          );
+        } else {
+          // 未完了を完了に戻す
+
+          // 完了に追加
+          if (index < state.completeTodoList.length) {
+            state.completeTodoList.splice(index, 0, foundTodo);
+          } else {
+            state.completeTodoList.push(foundTodo);
+          }
+
+          // 未完了リストから除外
+          state.incompleteTodoList = state.incompleteTodoList.filter(
+            (todo) => todo.id !== todoId
+          );
+        }
+      }
+    },
+    setIncompleteTodoList: (state, action) => {
+      state.incompleteTodoList = action.payload?.incompleteTodoList;
+    },
+    setCompleteTodoList: (state, action) => {
+      state.completeTodoList = action.payload?.completeTodoList;
+    },
+    setTodoList: (state, action) => {
+      state.todoList = action.payload?.todoList;
     },
   },
   extraReducers: (builder) => {
@@ -209,26 +251,34 @@ const todoSlice = createSlice({
       (
         state: TodoState,
         action: PayloadAction<{
-          todoList: Array<Todo>;
           incompleteTodoList: Array<Todo>;
           completeTodoList: Array<Todo>;
+          todoList: Array<Todo>;
         }>
       ) => {
         const {
-          todoList = [],
           incompleteTodoList = [],
           completeTodoList = [],
+          todoList = [],
         } = action.payload;
-        state.todoList = todoList;
         state.incompleteTodoList = incompleteTodoList;
         state.completeTodoList = completeTodoList;
+        state.todoList = todoList;
         state.isFinishGetTodoList = true;
       }
     );
   },
 });
 
-export const { postTodo, completeTodo, incompleteTodo, deleteTodo, undoTodo } =
-  todoSlice.actions;
+export const {
+  postTodo,
+  completeTodo,
+  incompleteTodo,
+  deleteTodo,
+  undoTodo,
+  setIncompleteTodoList,
+  setCompleteTodoList,
+  setTodoList,
+} = todoSlice.actions;
 
 export default todoSlice.reducer;

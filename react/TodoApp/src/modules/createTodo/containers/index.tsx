@@ -6,7 +6,7 @@ import { useAppDispatch } from 'app/hooks';
 import { postTodo } from 'modules';
 import { styles } from './styles';
 
-const CreateTodoScreen = () => {
+const CreateTodoContainer = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
@@ -59,4 +59,4 @@ const CreateTodoScreen = () => {
   );
 };
 
-export default CreateTodoScreen;
+export default CreateTodoContainer;

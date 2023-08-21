@@ -9,7 +9,7 @@ import { styles } from './styles';
 
 type TodoDetailScreenRouteProp = RouteProp<RootStackParamList, 'TodoDetail'>;
 
-const TodoDetailScreen = () => {
+const TodoDetailContainer = () => {
   const route = useRoute<TodoDetailScreenRouteProp>();
   const { todo } = route.params || {};
   const { id, text } = todo || {};
@@ -34,4 +34,4 @@ const TodoDetailScreen = () => {
   );
 };
 
-export default TodoDetailScreen;
+export default TodoDetailContainer;

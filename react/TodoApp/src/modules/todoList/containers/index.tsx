@@ -4,9 +4,8 @@ import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { getTodoList } from 'modules';
 import TodoList, { TodoListType } from 'modules/todoList/components/TodoList';
 import { styles } from './styles';
-import Footer from 'components/Footer';
 
-const TodoListScreen = () => {
+const TodoListContainer = () => {
   // 未完了Todo
   const incompleteTodoList = useAppSelector(
     (state) => state.global.incompleteTodoList
@@ -70,9 +69,8 @@ const TodoListScreen = () => {
           />
         </TabView.Item>
       </TabView>
-      <Footer />
     </>
   );
 };
 
-export default TodoListScreen;
+export default TodoListContainer;

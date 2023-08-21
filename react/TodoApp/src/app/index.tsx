@@ -4,9 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Todo } from 'modules';
-import TodoListScreen from 'modules/todoList/containers';
-import TodoDetailScreen from 'modules/todoDetail/containers';
-import CreateTodoScreen from 'modules/createTodo/containers';
+import TodoListScreen from 'screens/TodoListScreen';
+import TodoDetailScreen from 'screens/TodoDetailScreen';
+import CreateTodoScreen from 'screens/CreateTodoScreen';
 import { store } from './store';
 
 export type RootStackParamList = {

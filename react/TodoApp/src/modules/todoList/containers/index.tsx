@@ -3,9 +3,13 @@ import { Tab, TabView } from '@rneui/themed';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { getTodoList } from 'modules';
 import TodoList, { TodoListType } from 'modules/todoList/components/TodoList';
+import Footer from 'modules/todoList/components/Footer';
 import { styles } from './styles';
 
 const TodoListContainer = () => {
+  // tabIndex
+  const [tabIndex, setTabIndex] = useState(0);
+
   // 未完了Todo
   const incompleteTodoList = useAppSelector(
     (state) => state.global.incompleteTodoList
@@ -22,8 +26,8 @@ const TodoListContainer = () => {
   );
 
   const dispatch = useAppDispatch();
-  const [tabIndex, setTabIndex] = useState(0);
 
+  // 起動時にTodoリスト情報取得
   useEffect(() => {
     dispatch(getTodoList());
   }, [dispatch]);
@@ -46,7 +50,7 @@ const TodoListContainer = () => {
         <Tab.Item title="全て" />
       </Tab>
 
-      <TabView value={tabIndex} onChange={setTabIndex} animationType="spring">
+      <TabView value={tabIndex} onChange={onTabChange} animationType="spring">
         <TabView.Item style={styles.tabViewItem}>
           <TodoList
             type={TodoListType.incomplete}
@@ -69,6 +73,7 @@ const TodoListContainer = () => {
           />
         </TabView.Item>
       </TabView>
+      <Footer onTabChange={onTabChange} />
     </>
   );
 };

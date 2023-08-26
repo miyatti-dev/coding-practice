@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -121,6 +121,24 @@ const TodoList = ({
     [dispatch, type]
   );
 
+  const emptyText = useMemo(() => {
+    let text;
+    switch (type) {
+      case TodoListType.incomplete:
+        text = '未完了のTodoはありません';
+        break;
+      case TodoListType.complete:
+        text = '完了のTodoはありません';
+        break;
+      case TodoListType.all:
+        text = 'Todoはありません';
+        break;
+      default:
+        break;
+    }
+    return text;
+  }, [type]);
+
   if (!isFinishGetTodoList) {
     return (
       <View style={styles.activityIndicatorContainer}>
@@ -138,6 +156,13 @@ const TodoList = ({
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           onDragEnd={onDragEnd}
+          contentContainerStyle={styles.todoListContentContainer}
+          style={styles.todoList}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>{emptyText}</Text>
+            </View>
+          }
         />
       </GestureHandlerRootView>
       {visibleUndoButton && (

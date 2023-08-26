@@ -5,6 +5,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  todoListContentContainer: {
+    flexGrow: 1,
+  },
+  todoList: {
+    height: '100%',
+  },
   overlayView: {
     position: 'absolute',
     zIndex: 100,
@@ -21,5 +27,13 @@ export const styles = StyleSheet.create({
   },
   overlayText: {
     color: 'white',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
   },
 });

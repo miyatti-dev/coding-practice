@@ -8,8 +8,4 @@ export const styles = StyleSheet.create({
   tabViewItem: {
     width: '100%',
   },
-  plusIconContainer: {
-    marginLeft: 'auto',
-    marginRight: 10,
-  },
 });

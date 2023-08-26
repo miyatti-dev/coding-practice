@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { Text } from 'react-native';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import { Button, Dialog } from '@rneui/themed';
+import React from 'react';
+import { View } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { Text } from '@rneui/themed';
 import { RootStackParamList } from 'app';
-import { useAppDispatch } from 'app/hooks';
-import { deleteTodo } from 'modules';
+import Footer from 'modules/todoDetail/components/Footer';
 import { styles } from './styles';
 
 type TodoDetailScreenRouteProp = RouteProp<RootStackParamList, 'TodoDetail'>;
@@ -12,45 +11,15 @@ type TodoDetailScreenRouteProp = RouteProp<RootStackParamList, 'TodoDetail'>;
 const TodoDetailContainer = () => {
   const route = useRoute<TodoDetailScreenRouteProp>();
   const { todo } = route.params || {};
-  const { id, text } = todo || {};
-
-  const navigation = useNavigation();
-  const dispatch = useAppDispatch();
-
-  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
-  const toggleDeleteDialog = useCallback(() => {
-    setIsDeleteDialogVisible(
-      (prevIsDeleteDialogVisible) => !prevIsDeleteDialogVisible
-    );
-  }, []);
-
-  const onPressDeleteButton = useCallback(() => {
-    toggleDeleteDialog();
-  }, [toggleDeleteDialog]);
-
-  const deleteTodoFunc = useCallback(() => {
-    dispatch(deleteTodo({ id }));
-    navigation.goBack();
-  }, [dispatch, id, navigation]);
+  const { text } = todo || {};
 
   return (
     <>
-      <Text>{text}</Text>
-      <Button
-        title={'削除'}
-        containerStyle={styles.deleteButton}
-        onPress={onPressDeleteButton}
-      />
-      <Dialog
-        isVisible={isDeleteDialogVisible}
-        onBackdropPress={toggleDeleteDialog}
-      >
-        <Text>このTodoを削除しますか？</Text>
-        <Dialog.Actions>
-          <Dialog.Button title="削除する" onPress={deleteTodoFunc} />
-          <Dialog.Button title="キャンセル" onPress={toggleDeleteDialog} />
-        </Dialog.Actions>
-      </Dialog>
+      <View style={styles.container}>
+        <Text style={styles.title}>ToDo内容</Text>
+        <Text style={styles.text}>{text}</Text>
+      </View>
+      <Footer todo={todo} />
     </>
   );
 };

@@ -25,12 +25,12 @@ const HomeDrawer = () => {
       <Drawer.Screen
         name="TodoList"
         component={TodoListScreen}
-        options={{ title: 'Todo 一覧' }}
+        options={{ title: 'Todo一覧' }}
       />
       <Drawer.Screen
         name="CreateTodo"
         component={CreateTodoScreen}
-        options={{ title: 'Todo を作成する' }}
+        options={{ title: 'Todoを作成する' }}
       />
     </Drawer.Navigator>
   );
@@ -49,12 +49,12 @@ const App = () => {
           <Stack.Screen
             name="TodoDetail"
             component={TodoDetailScreen}
-            options={{ title: 'Todo 詳細' }}
+            options={{ title: 'Todo詳細' }}
           />
           <Stack.Screen
             name="CreateTodo"
             component={CreateTodoScreen}
-            options={{ title: 'Todo を作成する' }}
+            options={{ title: 'Todoを作成する' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

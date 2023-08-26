@@ -1,9 +1,17 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  deleteButton: {
-    width: 200,
-    marginHorizontal: 50,
-    marginVertical: 10,
+  container: {
+    flex: 1,
+    margin: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 50,
   },
 });

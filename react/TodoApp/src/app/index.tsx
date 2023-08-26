@@ -10,6 +10,7 @@ import CreateTodoScreen from 'screens/CreateTodoScreen';
 import { store } from './store';
 
 export type RootStackParamList = {
+  HomeDrawer: undefined;
   TodoList: undefined;
   TodoDetail: { todo: Todo };
   CreateTodo: undefined;
@@ -41,7 +42,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="TodoList">
           <Stack.Screen
-            name="TodoList"
+            name="HomeDrawer"
             component={HomeDrawer}
             options={{ headerShown: false }}
           />

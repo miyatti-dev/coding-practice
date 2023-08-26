@@ -5,6 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Icon } from '@rneui/base';
 import { RootStackParamList } from 'app';
 import SelectListIcon from 'modules/todoList/components/SelectListIcon';
+import MoreMenuIcon from 'modules/todoList/components/MoreMenuIcon';
 import { styles } from './styles';
 
 const Footer = ({ onTabChange }: { onTabChange: (index: number) => void }) => {
@@ -21,13 +22,7 @@ const Footer = ({ onTabChange }: { onTabChange: (index: number) => void }) => {
   return (
     <View style={styles.container}>
       <SelectListIcon onTabChange={onTabChange} />
-      <Icon
-        color="#2089dc"
-        name="ellipsis-h"
-        onPress={onPressCreateTodo}
-        reverse
-        type="font-awesome-5"
-      />
+      <MoreMenuIcon />
       <View style={styles.plusIconContainer}>
         <Icon
           color="#2089dc"

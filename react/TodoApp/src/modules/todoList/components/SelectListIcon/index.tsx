@@ -15,7 +15,7 @@ const SelectListIcon = ({
   onTabChange: (index: number) => void;
 }) => {
   // リスト選択のBottomSheetを表示するかどうか
-  const [isSelectListVisible, setIsSelectVisible] = useState(false);
+  const [isSelectListVisible, setIsSelectListVisible] = useState(false);
 
   // リスト選択のBottomSheetの表示内容
   const selectList: Array<SelectListItem> = useMemo(
@@ -23,7 +23,7 @@ const SelectListIcon = ({
       {
         title: 'リスト選択',
         onPress: () => {
-          setIsSelectVisible(false);
+          setIsSelectListVisible(false);
         },
         containerStyle: {
           fontsize: 30,
@@ -35,30 +35,30 @@ const SelectListIcon = ({
       {
         title: '未完了',
         onPress: () => {
-          setIsSelectVisible(false);
+          setIsSelectListVisible(false);
           onTabChange(0);
         },
       },
       {
         title: '完了',
         onPress: () => {
-          setIsSelectVisible(false);
+          setIsSelectListVisible(false);
           onTabChange(1);
         },
       },
       {
         title: '全て',
         onPress: () => {
-          setIsSelectVisible(false);
+          setIsSelectListVisible(false);
           onTabChange(2);
-        },
-        containerStyle: {
-          borderBottomWidth: 1,
         },
       },
       {
         title: 'キャンセル',
-        onPress: () => setIsSelectVisible(false),
+        onPress: () => setIsSelectListVisible(false),
+        containerStyle: {
+          borderTopWidth: 1,
+        },
       },
     ],
     [onTabChange]
@@ -66,12 +66,12 @@ const SelectListIcon = ({
 
   // リスト表示選択
   const onPressList = useCallback(() => {
-    setIsSelectVisible(true);
+    setIsSelectListVisible(true);
   }, []);
 
   // リスト背景選択
   const onPressBackground = useCallback(() => {
-    setIsSelectVisible(false);
+    setIsSelectListVisible(false);
   }, []);
 
   return (

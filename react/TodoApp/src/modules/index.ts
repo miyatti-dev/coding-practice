@@ -162,6 +162,25 @@ const todoSlice = createSlice({
         );
       }
     },
+    completeAllTodo: (state) => {
+      // 全てを完了にする
+      let todoListCount = state.todoList.length;
+      for (let i = 0; i < todoListCount; i++) {
+        const todo = state.todoList[i];
+        todo.completed = true;
+      }
+
+      // 未完了リストにあるものを完了リストに追加する
+      todoListCount = state.incompleteTodoList.length;
+      for (let i = 0; i < todoListCount; i++) {
+        const todo = state.incompleteTodoList[i];
+        todo.completed = true;
+        state.completeTodoList.push(todo);
+      }
+
+      // 未完了リストをクリア
+      state.incompleteTodoList = [];
+    },
     incompleteTodo: (state, action) => {
       const todoId = action.payload?.id;
 
@@ -194,6 +213,15 @@ const todoSlice = createSlice({
       state.todoList = tmpTodoList;
       state.incompleteTodoList = tmpIncompleteTodoList;
       state.completeTodoList = tmpCompleteTodoList;
+    },
+    deleteCompletedTodo: (state) => {
+      // 完了済みタスクを削除する
+
+      state.todoList = state.todoList.filter(
+        (todo) => todo.completed === false
+      );
+
+      state.completeTodoList = [];
     },
     undoTodo: (state, action) => {
       const { id: todoId, index = 0 } = action.payload || {};
@@ -273,8 +301,10 @@ const todoSlice = createSlice({
 export const {
   postTodo,
   completeTodo,
+  completeAllTodo,
   incompleteTodo,
   deleteTodo,
+  deleteCompletedTodo,
   undoTodo,
   setIncompleteTodoList,
   setCompleteTodoList,

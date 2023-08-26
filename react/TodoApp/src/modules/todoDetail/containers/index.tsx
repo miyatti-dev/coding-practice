@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Text } from 'react-native';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import { Button } from '@rneui/themed';
+import { Button, Dialog } from '@rneui/themed';
 import { RootStackParamList } from 'app';
 import { useAppDispatch } from 'app/hooks';
 import { deleteTodo } from 'modules';
@@ -17,7 +17,18 @@ const TodoDetailContainer = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
+  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
+  const toggleDeleteDialog = useCallback(() => {
+    setIsDeleteDialogVisible(
+      (prevIsDeleteDialogVisible) => !prevIsDeleteDialogVisible
+    );
+  }, []);
+
   const onPressDeleteButton = useCallback(() => {
+    toggleDeleteDialog();
+  }, [toggleDeleteDialog]);
+
+  const deleteTodoFunc = useCallback(() => {
     dispatch(deleteTodo({ id }));
     navigation.goBack();
   }, [dispatch, id, navigation]);
@@ -30,6 +41,16 @@ const TodoDetailContainer = () => {
         containerStyle={styles.deleteButton}
         onPress={onPressDeleteButton}
       />
+      <Dialog
+        isVisible={isDeleteDialogVisible}
+        onBackdropPress={toggleDeleteDialog}
+      >
+        <Text>このTodoを削除しますか？</Text>
+        <Dialog.Actions>
+          <Dialog.Button title="削除する" onPress={deleteTodoFunc} />
+          <Dialog.Button title="キャンセル" onPress={toggleDeleteDialog} />
+        </Dialog.Actions>
+      </Dialog>
     </>
   );
 };

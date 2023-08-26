@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useMemo } from 'react';
-import { Icon } from '@rneui/base';
-import { BottomSheet, ListItem } from '@rneui/themed';
+import { Icon, Text } from '@rneui/base';
+import { BottomSheet, ListItem, Dialog } from '@rneui/themed';
 import { useAppDispatch } from 'app/hooks';
 import { completeAllTodo, deleteCompletedTodo } from 'modules';
 import { styles } from './styles';
@@ -17,6 +17,23 @@ const MoreMenuIcon = () => {
 
   const dispatch = useAppDispatch();
 
+  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
+  const toggleDeleteDialog = useCallback(() => {
+    setIsDeleteDialogVisible(
+      (prevIsDeleteDialogVisible) => !prevIsDeleteDialogVisible
+    );
+  }, []);
+
+  const onPressDeleteAllButton = useCallback(() => {
+    toggleDeleteDialog();
+  }, [toggleDeleteDialog]);
+
+  const deleteTodoFunc = useCallback(() => {
+    dispatch(deleteCompletedTodo());
+    toggleDeleteDialog();
+    setIsMoreMenuVisible(false);
+  }, [toggleDeleteDialog, dispatch]);
+
   // MoreMenuのBottomSheetの表示内容
   const moreMenuList: Array<MoreMenuItem> = useMemo(
     () => [
@@ -32,11 +49,8 @@ const MoreMenuIcon = () => {
         },
       },
       {
-        title: '完了したタスクをすべて削除',
-        onPress: () => {
-          setIsMoreMenuVisible(false);
-          dispatch(deleteCompletedTodo());
-        },
+        title: '完了したタスクを全て削除',
+        onPress: onPressDeleteAllButton,
       },
       {
         title: 'キャンセル',
@@ -46,7 +60,7 @@ const MoreMenuIcon = () => {
         },
       },
     ],
-    [dispatch]
+    [dispatch, onPressDeleteAllButton]
   );
 
   // MoreMenu表示選択
@@ -85,6 +99,16 @@ const MoreMenuIcon = () => {
           </ListItem>
         ))}
       </BottomSheet>
+      <Dialog
+        isVisible={isDeleteDialogVisible}
+        onBackdropPress={toggleDeleteDialog}
+      >
+        <Text>完了したタスクを全て削除しますか？</Text>
+        <Dialog.Actions>
+          <Dialog.Button title="全て削除する" onPress={deleteTodoFunc} />
+          <Dialog.Button title="キャンセル" onPress={toggleDeleteDialog} />
+        </Dialog.Actions>
+      </Dialog>
     </>
   );
 };

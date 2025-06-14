@@ -1,11 +1,18 @@
-import Box from "@mui/material/Box";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { CommonLayout } from "./components/CommonLayout";
+import { Detail } from "./pages/Detail";
 import { Top } from "./pages/Top";
 
 const App = () => {
 	return (
-		<Box sx={{ bgcolor: "background.paper", width: "100vw" }}>
-			<Top />
-		</Box>
+		<Router>
+			<Routes>
+				<Route path="/" element={<CommonLayout />}>
+					<Route path="/" element={<Top />} />
+					<Route path="/detail" element={<Detail />} />
+				</Route>
+			</Routes>
+		</Router>
 	);
 };
 

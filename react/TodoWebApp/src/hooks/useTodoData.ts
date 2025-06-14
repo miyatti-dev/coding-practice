@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export type Todo = {
 	id: number;
@@ -86,6 +86,57 @@ const createTodoList = (todoList: Array<Todo>) => {
 };
 
 export const useTodoData = () => {
-	const [todoData] = useState(createTodoList(initTodoList));
-	return todoData;
+	const [todoData, setTodoData] = useState(createTodoList(initTodoList));
+
+	const completeTodo = useCallback((todoId: number) => {
+		setTodoData((prev) => {
+			const updatedTodoList = prev.todoList.map((todo) =>
+				todo.id === todoId ? { ...todo, completed: true } : todo,
+			);
+
+			return createTodoList(updatedTodoList);
+		});
+	}, []);
+
+	const incompleteTodo = useCallback((todoId: number) => {
+		setTodoData((prev) => {
+			const updatedTodoList = prev.todoList.map((todo) =>
+				todo.id === todoId ? { ...todo, completed: false } : todo,
+			);
+
+			return createTodoList(updatedTodoList);
+		});
+	}, []);
+
+	const addTodo = useCallback((todoText: string) => {
+		const getMaxId = (todoList: Todo[]): number => {
+			if (todoList.length === 0) return 0;
+
+			return Math.max(...todoList.map((todo) => todo.id));
+		};
+
+		setTodoData((prev) => {
+			const maxId = getMaxId(prev.todoList);
+
+			const updatedTodoList = prev.todoList.concat({
+				id: maxId + 1,
+				text: todoText,
+				completed: false,
+			});
+
+			return createTodoList(updatedTodoList);
+		});
+	}, []);
+
+	const deleteTodo = useCallback((todoId: number) => {
+		setTodoData((prev) => {
+			const updatedTodoList = prev.todoList.filter(
+				(todo) => todo.id !== todoId,
+			);
+
+			return createTodoList(updatedTodoList);
+		});
+	}, []);
+
+	return { ...todoData, completeTodo, incompleteTodo, addTodo, deleteTodo };
 };

@@ -8,7 +8,13 @@ import { useTodoData } from "../hooks/useTodoData";
 
 export const Top = () => {
 	const [activeTabIndex, setActiveTabIndex] = React.useState(0);
-	const { todoList, incompleteTodoList, completeTodoList } = useTodoData();
+	const {
+		todoList,
+		incompleteTodoList,
+		completeTodoList,
+		completeTodo,
+		incompleteTodo,
+	} = useTodoData();
 
 	const handleActiveTabChange = (
 		_event: React.SyntheticEvent,
@@ -39,13 +45,17 @@ export const Top = () => {
 				</Tabs>
 			</AppBar>
 			<TabPanel activeTabIndex={activeTabIndex} index={0}>
-				<TodoList todoList={incompleteTodoList} />
+				<TodoList todoList={incompleteTodoList} completeTodo={completeTodo} />
 			</TabPanel>
 			<TabPanel activeTabIndex={activeTabIndex} index={1}>
-				<TodoList todoList={completeTodoList} />
+				<TodoList todoList={completeTodoList} incompleteTodo={incompleteTodo} />
 			</TabPanel>
 			<TabPanel activeTabIndex={activeTabIndex} index={2}>
-				<TodoList todoList={todoList} />
+				<TodoList
+					todoList={todoList}
+					completeTodo={completeTodo}
+					incompleteTodo={incompleteTodo}
+				/>
 			</TabPanel>
 		</>
 	);

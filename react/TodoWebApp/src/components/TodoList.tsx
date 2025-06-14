@@ -4,40 +4,44 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import React from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Todo } from "../hooks/useTodoData";
 
 type Props = {
 	todoList: Todo[];
+	completeTodo?: (todoId: number) => void;
+	incompleteTodo?: (todoId: number) => void;
 };
 
-export const TodoList = ({ todoList }: Props) => {
-	const [checked, setChecked] = React.useState([0]);
+export const TodoList = ({ todoList, completeTodo, incompleteTodo }: Props) => {
+	const navigate = useNavigate();
 
-	const handleToggle = (value: number) => () => {
-		const currentIndex = checked.indexOf(value);
-		const newChecked = [...checked];
-
-		if (currentIndex === -1) {
-			newChecked.push(value);
-		} else {
-			newChecked.splice(currentIndex, 1);
-		}
-
-		setChecked(newChecked);
-	};
+	const onClickListItemButton = useCallback(() => {
+		navigate("/detail");
+	}, [navigate]);
 
 	return (
-		<List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+		<List sx={{ width: "100%", bgcolor: "background.paper" }}>
 			{todoList?.map((todo: Todo) => {
 				const labelId = `checkbox-list-label-${todo.id}`;
 
 				return (
 					<ListItem key={todo.id} disablePadding>
-						<ListItemButton onClick={handleToggle(todo.id)} dense>
-							<ListItemIcon>
-								<Checkbox edge="start" checked={checked.includes(todo.id)} />
-							</ListItemIcon>
+						<ListItemIcon>
+							<Checkbox
+								edge="start"
+								checked={todo.completed}
+								onChange={(_event, checked) => {
+									if (checked) {
+										completeTodo?.(todo.id);
+									} else {
+										incompleteTodo?.(todo.id);
+									}
+								}}
+							/>
+						</ListItemIcon>
+						<ListItemButton onClick={onClickListItemButton} dense>
 							<ListItemText id={labelId} primary={`${todo.text}`} />
 						</ListItemButton>
 					</ListItem>

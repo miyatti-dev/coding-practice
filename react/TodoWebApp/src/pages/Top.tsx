@@ -4,17 +4,12 @@ import Tabs from "@mui/material/Tabs";
 import React from "react";
 import { TabPanel } from "../components/TabPanel";
 import { TodoList } from "../components/TodoList";
-import { useTodoData } from "../hooks/useTodoData";
+import { useTodoDataContext } from "../hooks/useTodoDataContext";
 
 export const Top = () => {
 	const [activeTabIndex, setActiveTabIndex] = React.useState(0);
-	const {
-		todoList,
-		incompleteTodoList,
-		completeTodoList,
-		completeTodo,
-		incompleteTodo,
-	} = useTodoData();
+	const { todoList, incompleteTodoList, completeTodoList } =
+		useTodoDataContext();
 
 	const handleActiveTabChange = (
 		_event: React.SyntheticEvent,
@@ -45,17 +40,13 @@ export const Top = () => {
 				</Tabs>
 			</AppBar>
 			<TabPanel activeTabIndex={activeTabIndex} index={0}>
-				<TodoList todoList={incompleteTodoList} completeTodo={completeTodo} />
+				<TodoList todoList={incompleteTodoList} />
 			</TabPanel>
 			<TabPanel activeTabIndex={activeTabIndex} index={1}>
-				<TodoList todoList={completeTodoList} incompleteTodo={incompleteTodo} />
+				<TodoList todoList={completeTodoList} />
 			</TabPanel>
 			<TabPanel activeTabIndex={activeTabIndex} index={2}>
-				<TodoList
-					todoList={todoList}
-					completeTodo={completeTodo}
-					incompleteTodo={incompleteTodo}
-				/>
+				<TodoList todoList={todoList} />
 			</TabPanel>
 		</>
 	);

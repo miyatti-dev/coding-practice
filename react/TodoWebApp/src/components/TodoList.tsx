@@ -7,15 +7,15 @@ import ListItemText from "@mui/material/ListItemText";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Todo } from "../hooks/useTodoData";
+import { useTodoDataContext } from "../hooks/useTodoDataContext";
 
 type Props = {
 	todoList: Todo[];
-	completeTodo?: (todoId: number) => void;
-	incompleteTodo?: (todoId: number) => void;
 };
 
-export const TodoList = ({ todoList, completeTodo, incompleteTodo }: Props) => {
+export const TodoList = ({ todoList }: Props) => {
 	const navigate = useNavigate();
+	const { completeTodo, incompleteTodo } = useTodoDataContext();
 
 	const onClickListItemButton = useCallback(() => {
 		navigate("/detail");

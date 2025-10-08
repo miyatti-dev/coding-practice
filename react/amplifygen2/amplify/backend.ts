@@ -1,11 +1,12 @@
 import { defineBackend } from '@aws-amplify/backend';
-import { auth } from './auth/resource';
-import { data } from './data/resource';
+import { helloWorld } from './functions/hello-world/resource';
 
-/**
- * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
- */
-defineBackend({
-  auth,
-  data,
+const backend = defineBackend({
+  helloWorld,
+});
+
+backend.addOutput({
+  custom: {
+    helloWorldFunctionName: backend.helloWorld.resources.lambda.functionName,
+  },
 });

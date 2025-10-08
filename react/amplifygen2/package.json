@@ -19,6 +19,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@aws-sdk/types": "^3.901.0",
     "aws-amplify": "^6.15.7"
   }
 }

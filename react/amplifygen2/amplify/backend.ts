@@ -1,5 +1,5 @@
 import { defineBackend } from '@aws-amplify/backend';
-import { helloWorld } from './functions/hello-world/resource';
+import { helloWorld } from './functions/hello-world/resource.ts';
 
 const backend = defineBackend({
   helloWorld,

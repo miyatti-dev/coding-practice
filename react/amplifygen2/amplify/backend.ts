@@ -1,12 +1,7 @@
-import { defineBackend } from '@aws-amplify/backend';
-import { helloWorld } from './functions/hello-world/resource.ts';
+import { defineBackend } from "@aws-amplify/backend";
+import { data } from "./data/resource.ts";
 
-const backend = defineBackend({
-  helloWorld,
+defineBackend({
+  data,
 });
 
-backend.addOutput({
-  custom: {
-    helloWorldFunctionName: backend.helloWorld.resources.lambda.functionName,
-  },
-});

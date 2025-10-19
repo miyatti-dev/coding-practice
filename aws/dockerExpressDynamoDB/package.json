@@ -1,0 +1,16 @@
+{
+  "name": "express-docker",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.902.0",
+    "@aws-sdk/lib-dynamodb": "^3.902.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "serverless-http": "^4.0.0",
+    "uuid": "^13.0.0"
+  }
+}

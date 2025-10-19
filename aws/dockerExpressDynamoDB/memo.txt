@@ -1,0 +1,29 @@
+起動方法）
+
+ビルド＆起動
+docker compose up --build
+
+--------------------------------------------------
+１）
+Docker 環境で Express のみ
+
+バックアップファイル
+index_express.js
+docker-compose_express.yml
+
+--------------------------------------------------
+２）
+Docker 環境で Express + DynamoDB 
+
+バックアップファイル
+index_express+dynamodb.js
+docker-compose_express+dynamodb.yaml
+
+
+--------------------------------------------------
+３）
+AWS に移行（API Gateway + Lamdba + DyanamoDB）
+
+index.js は lambda 用になっている
+
+--------------------------------------------------
